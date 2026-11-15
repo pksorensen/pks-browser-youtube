@@ -2,6 +2,10 @@
   "name": "youtube-lyd",
   "description": "Optager lydsporet fra en YouTube-video i din egen browser, til at transskribere selv. Videoen spilles lydløst på 16×, så en time tager omkring fire minutter. UDKAST — testet mod en lokal MSE-afspiller, ikke mod YouTube.",
   "profile": "youtube",
+  "hosts": [
+    "youtube.com",
+    "youtu.be"
+  ],
   "params": {
     "url": {
       "required": true,

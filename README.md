@@ -70,7 +70,8 @@ irm https://agentics.dk/install/pks-agent-browser-tray.ps1 | iex
 ```
 
 - Tray-version **0.1.22** eller nyere. Den har `media`-verbet og parametre.
-- En profil der hedder `youtube`. Den følger med som standard fra samme version.
+- Profilen `youtube` følger med opskriften. Første gang spørger kvitteringen, om den må
+  oprettes med adgang til youtube.com og youtu.be.
 - **Første gang:** en ny profil får YouTubes samtykkeside for cookies. Åbn profilen via
   menuen (*Log ind i profil 'youtube'…*), gå ind på youtube.com og svar én gang. Så husker
   profilen det.

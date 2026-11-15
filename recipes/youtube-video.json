@@ -2,6 +2,10 @@
   "name": "youtube-video",
   "description": "Optager hele YouTube-videoen, lyd og billede som to filer, i din egen browser. Videoen spilles lydløst på 16×; billedet bliver i den kvalitet afspilleren kan følge med i. UDKAST — testet mod en lokal MSE-afspiller, ikke mod YouTube.",
   "profile": "youtube",
+  "hosts": [
+    "youtube.com",
+    "youtu.be"
+  ],
   "params": {
     "url": {
       "required": true,
