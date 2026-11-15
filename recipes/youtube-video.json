@@ -9,7 +9,7 @@
   "params": {
     "url": {
       "required": true,
-      "description": "Videoens adresse, fx https://www.youtube.com/watch?v=O_zcc6Xl12g"
+      "description": "Videoens adresse, fx www.youtube.com/watch?v=O_zcc6Xl12g"
     }
   },
   "result": [
