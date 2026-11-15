@@ -18,11 +18,12 @@ igennem. Trayen kører på den maskine, så den kan hente det, en server ikke ka
 | --- | --- | --- | --- |
 | [`recipes/youtube-lyd.json`](recipes/youtube-lyd.json) | Henter lyden som m4a. Den kan transskriberes direkte. | `media`-verbet | **UDKAST: ikke kørt mod YouTube** |
 | [`recipes/youtube-video.json`](recipes/youtube-video.json) | Henter videoen som mp4 (typisk 360p) | `media`-verbet | **UDKAST: ikke kørt mod YouTube** |
-| [`recipes/youtube-udskrift.json`](recipes/youtube-udskrift.json) | Læser sidens eget "Vis udskrift"-panel: tidskode og tekst | ingenting nyt | **UDKAST: selektorerne er ikke målt** |
+| [`recipes/youtube-udskrift.json`](recipes/youtube-udskrift.json) | Læser sidens eget "Vis udskrift"-panel: tidskode og tekst | kun profilen `youtube` (se Krav) | **UDKAST: selektorerne er ikke målt** |
 
-Alle tre starter på youtube.com. Du åbner selv videoen i vinduet og trykker *Fortsæt*,
-og opskriften henter den video, du står på. Derfor skal **Vis browser** være slået til i
-trayens menu, ellers kan du ikke se vinduet.
+Alle tre starter på youtube.com. Du åbner selv videoen i vinduet, og opskriften fortsætter af sig
+selv, så snart du står på en videoside (`youtube.com/watch`). Derfor skal **Vis browser** være
+slået til i trayens menu, ellers kan du ikke se vinduet. Du har 5 minutter til at finde videoen,
+fordi trayen højst venter 10 minutter på hele kørslen, og hentningen skal også nå at blive færdig.
 
 Filen lander i `%USERPROFILE%\.agentics\browser-tray\recipes\<opskrift>.media\`, for eksempel
 `youtube-lyd.media\O_zcc6Xl12g.m4a`. Titel, kanal og varighed står i `<opskrift>.result.json`.
@@ -34,7 +35,9 @@ irm https://agentics.dk/install/pks-agent-browser-tray.ps1 | iex
 ```
 
 - En tray-version med `media`-verbet. Den er endnu **ikke udgivet**.
-- En profil der hedder `youtube`. Den følger med som standard (`youtube.com`, `youtu.be`).
+- En profil der hedder `youtube`. Den følger med som standard fra tray-versionen med `media`.
+  På en ældre tray skal du selv tilføje den i `settings.json`, også til `youtube-udskrift`:
+  `"profiles": { "youtube": ["youtube.com", "youtu.be"] }` (de andre profiler bevares).
 - **Node 22 eller nyere**, hvis trayen kører den slanke motor på din egen Node. yt-dlp kan ikke
   løse YouTubes JS-udfordring med ældre Node. Den fulde motor har sin egen Node 24 med.
 

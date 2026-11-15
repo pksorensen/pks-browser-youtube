@@ -2,28 +2,68 @@
   "name": "youtube-udskrift",
   "description": "Henter en YouTube-videos udskrift (tidskode + tekst) fra sidens eget 'Vis udskrift'-panel — skaberens undertekster eller YouTubes automatiske. Kræver intet media-verbum og ingen yt-dlp. UDKAST — selektorerne er skrevet efter YouTubes DOM, ikke målt på en rigtig side.",
   "profile": "youtube",
-  "result": ["titel", "kanal", "udskrift"],
+  "result": [
+    "titel",
+    "kanal",
+    "udskrift"
+  ],
   "steps": [
-    { "id": "aabn", "do": "goto", "url": "https://www.youtube.com/" },
+    {
+      "id": "aabn",
+      "do": "goto",
+      "url": "https://www.youtube.com/"
+    },
     {
       "id": "vaelg",
       "do": "human",
-      "prompt": "Åbn videoen i vinduet (klik samtykke-dialogen væk hvis den kommer), og tryk Fortsæt.",
-      "timeoutMs": 600000
+      "prompt": "Åbn videoen i vinduet (klik samtykke-dialogen væk hvis den kommer). Opskriften fortsætter af sig selv, så snart du står på videoens side.",
+      "timeoutMs": 300000,
+      "until": {
+        "url": "youtube.com/watch"
+      }
     },
-    { "id": "er-video", "do": "waitForUrl", "url": "youtube.com/watch" },
-    { "id": "vent", "do": "assert", "selector": "ytd-watch-metadata h1" },
-    { "id": "titel", "do": "collect", "selector": "ytd-watch-metadata h1", "as": "titel" },
-    { "id": "kanal", "do": "collect", "selector": "ytd-watch-metadata ytd-channel-name a", "as": "kanal" },
-    { "id": "udvid", "do": "click", "selector": "#description-inline-expander #expand", "optional": true },
-    { "id": "vis-udskrift", "do": "click", "selector": "ytd-video-description-transcript-section-renderer button" },
-    { "id": "vent-udskrift", "do": "assert", "selector": "ytd-transcript-segment-renderer" },
+    {
+      "id": "vent",
+      "do": "assert",
+      "selector": "ytd-watch-metadata h1"
+    },
+    {
+      "id": "titel",
+      "do": "collect",
+      "selector": "ytd-watch-metadata h1",
+      "as": "titel"
+    },
+    {
+      "id": "kanal",
+      "do": "collect",
+      "selector": "ytd-watch-metadata ytd-channel-name a",
+      "as": "kanal"
+    },
+    {
+      "id": "udvid",
+      "do": "click",
+      "selector": "#description-inline-expander #expand",
+      "optional": true
+    },
+    {
+      "id": "vis-udskrift",
+      "do": "click",
+      "selector": "ytd-video-description-transcript-section-renderer button"
+    },
+    {
+      "id": "vent-udskrift",
+      "do": "assert",
+      "selector": "ytd-transcript-segment-renderer"
+    },
     {
       "id": "hoest",
       "do": "collect",
       "selector": "ytd-transcript-segment-renderer",
       "as": "udskrift",
-      "fields": { "t": ".segment-timestamp", "tekst": ".segment-text" }
+      "fields": {
+        "t": ".segment-timestamp",
+        "tekst": ".segment-text"
+      }
     }
   ]
 }

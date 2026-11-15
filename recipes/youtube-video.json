@@ -2,16 +2,30 @@
   "name": "youtube-video",
   "description": "Henter en YouTube-video som mp4 (YouTubes progressive format, typisk 360p — alt over det kræver ffmpeg). Du finder videoen i vinduet; opskriften henter den du står på. UDKAST — ikke kørt mod YouTube.",
   "profile": "youtube",
-  "result": ["video"],
+  "result": [
+    "video"
+  ],
   "steps": [
-    { "id": "aabn", "do": "goto", "url": "https://www.youtube.com/" },
+    {
+      "id": "aabn",
+      "do": "goto",
+      "url": "https://www.youtube.com/"
+    },
     {
       "id": "vaelg",
       "do": "human",
-      "prompt": "Åbn den video du vil hente i vinduet, og tryk Fortsæt når den er i gang.",
-      "timeoutMs": 600000
+      "prompt": "Åbn den video du vil have i vinduet. Opskriften fortsætter af sig selv, så snart du står på videoens side.",
+      "timeoutMs": 300000,
+      "until": {
+        "url": "youtube.com/watch"
+      }
     },
-    { "id": "er-video", "do": "waitForUrl", "url": "youtube.com/watch" },
-    { "id": "hent", "do": "media", "format": "video", "as": "video", "label": "video" }
+    {
+      "id": "hent",
+      "do": "media",
+      "format": "video",
+      "as": "video",
+      "label": "video"
+    }
   ]
 }
