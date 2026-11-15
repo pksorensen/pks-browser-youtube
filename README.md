@@ -42,14 +42,19 @@ tog står i `<opskrift>.result.json`.
 
 ## Kør
 
+**Fra agentics.dk:** åbn [opskriftssiden](https://agentics.dk/browser/recipes/pksorensen/pks-browser-youtube),
+indsæt videoens adresse ved opskriften og tryk *Kør nu*. Trayen viser en kvittering med
+adressen, før noget kører.
+
+**Fra kommandolinjen:**
+
 ```powershell
 $tray = "$env:LOCALAPPDATA\Agentics\bin\pks-agent-browser-tray.exe"
 & $tray run --name youtube-lyd --param "url=https://www.youtube.com/watch?v=O_zcc6Xl12g" *> run.log; cat run.log
 ```
 
 Sæt anførselstegn om `url=…`: PowerShell læser `&` i en indsat adresse som en kommando.
-Menuen og "Kør nu" på agentics.dk kan endnu ikke give en adresse med, så indtil videre er
-det kommandolinjen.
+Menuen i trayen kan ikke give en adresse med. Brug siden eller kommandolinjen.
 
 Fejler en kørsel, står det optagelsen så i fejlbeskeden: hvor langt den nåede, den fart
 afspilleren faktisk kørte, og hvilke spor der kom. Et billede af fanen ligger i
@@ -64,7 +69,7 @@ og fejlen.
 irm https://agentics.dk/install/pks-agent-browser-tray.ps1 | iex
 ```
 
-- En tray-version med `media`-verbet og `--param`. Den er endnu **ikke udgivet**.
+- Tray-version **0.1.22** eller nyere. Den har `media`-verbet og parametre.
 - En profil der hedder `youtube`. Den følger med som standard fra samme version.
 - **Første gang:** en ny profil får YouTubes samtykkeside for cookies. Åbn profilen via
   menuen (*Log ind i profil 'youtube'…*), gå ind på youtube.com og svar én gang. Så husker
