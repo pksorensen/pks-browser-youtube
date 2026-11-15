@@ -44,8 +44,16 @@ tog står i `<opskrift>.result.json`.
 
 ```powershell
 $tray = "$env:LOCALAPPDATA\Agentics\bin\pks-agent-browser-tray.exe"
-& $tray run --name youtube-lyd --param url=https://www.youtube.com/watch?v=O_zcc6Xl12g *> run.log; cat run.log
+& $tray run --name youtube-lyd --param "url=https://www.youtube.com/watch?v=O_zcc6Xl12g" *> run.log; cat run.log
 ```
+
+Sæt anførselstegn om `url=…`: PowerShell læser `&` i en indsat adresse som en kommando.
+Menuen og "Kør nu" på agentics.dk kan endnu ikke give en adresse med, så indtil videre er
+det kommandolinjen.
+
+Fejler en kørsel, står det optagelsen så i fejlbeskeden: hvor langt den nåede, den fart
+afspilleren faktisk kørte, og hvilke spor der kom. Et billede af fanen ligger i
+`<opskrift>.fejl.skaerm.png`. Send begge, så kan opskriften rettes.
 
 Trayen er bygget som `WinExe` og har ingen konsol. Uden `*> fil` forsvinder både resultatet
 og fejlen.
