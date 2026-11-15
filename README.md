@@ -69,12 +69,18 @@ og fejlen.
 irm https://agentics.dk/install/pks-agent-browser-tray.ps1 | iex
 ```
 
-- Tray-version **0.1.22** eller nyere. Den har `media`-verbet og parametre.
+- Tray-version **0.1.23** eller nyere. Den har `media`-verbet og parametre, springer
+  reklamer over og afviser cookies på YouTubes samtykkeside første gang. Med 0.1.22 skal
+  samtykkesiden besvares i hånden i profilen, og en reklame spilles færdig.
 - Profilen `youtube` følger med opskriften. Første gang spørger kvitteringen, om den må
   oprettes med adgang til youtube.com og youtu.be.
-- **Første gang:** en ny profil får YouTubes samtykkeside for cookies. Åbn profilen via
-  menuen (*Log ind i profil 'youtube'…*), gå ind på youtube.com og svar én gang. Så husker
-  profilen det.
+
+## Få filen et andet sted hen
+
+Er du logget ind på agentics.dk, kan du på opskriftens side vælge en af dine Agent
+Share-indbakker under *Send resultatet til*. Når optagelsen er færdig, sender trayen
+sporene og resultatet dertil. Trayen skal selv være logget ind (menuen), og den sender kun
+til en indbakke du ejer. Vælger du ikke noget, bliver filerne på maskinen.
 
 ## Skal jeg logge ind?
 
