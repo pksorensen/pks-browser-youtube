@@ -1,28 +1,21 @@
 {
   "name": "youtube-video",
-  "description": "Henter en YouTube-video som mp4 (YouTubes progressive format, typisk 360p — alt over det kræver ffmpeg). Du finder videoen i vinduet; opskriften henter den du står på. UDKAST — ikke kørt mod YouTube.",
+  "description": "Optager hele YouTube-videoen, lyd og billede som to filer, i din egen browser. Videoen spilles lydløst på 16×; billedet bliver i den kvalitet afspilleren kan følge med i. UDKAST — testet mod en lokal MSE-afspiller, ikke mod YouTube.",
   "profile": "youtube",
+  "params": {
+    "url": {
+      "required": true,
+      "description": "Videoens adresse, fx https://www.youtube.com/watch?v=O_zcc6Xl12g"
+    }
+  },
   "result": [
     "video"
   ],
   "steps": [
     {
-      "id": "aabn",
-      "do": "goto",
-      "url": "https://www.youtube.com/"
-    },
-    {
-      "id": "vaelg",
-      "do": "human",
-      "prompt": "Åbn den video du vil have i vinduet. Opskriften fortsætter af sig selv, så snart du står på videoens side.",
-      "timeoutMs": 300000,
-      "until": {
-        "url": "youtube.com/watch"
-      }
-    },
-    {
-      "id": "hent",
+      "id": "optag",
       "do": "media",
+      "url": "{{url}}",
       "format": "video",
       "as": "video",
       "label": "video"

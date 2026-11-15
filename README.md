@@ -1,32 +1,54 @@
 # pks-browser-youtube
 
 Browser-opskrifter til YouTube, kørt **lokalt** af [Agentics browser-tray](https://agentics.dk/products/pks-agent-browser)
-på din egen maskine. Lyden og videoen hentes fra din egen internetforbindelse, og intet login forlader maskinen.
+på din egen maskine. Videoen optages i din egen browser over din egen internetforbindelse, og intet login forlader maskinen.
 
 **[Åbn opskrifterne på agentics.dk →](https://agentics.dk/browser/recipes/pksorensen/pks-browser-youtube)** Siden læser dette repo
 direkte og viser for hver opskrift, hvad trinene gør, og hvilke værter den rører.
 
 ## Hvorfor de findes
 
-YouTube afviser hentning fra en server med *"Sign in to confirm you're not a bot"*. Det sker uanset
-værktøj, fordi det er IP-adressen, der bliver afvist. Fra en almindelig hjemmeforbindelse går det
-igennem. Trayen kører på den maskine, så den kan hente det, en server ikke kan.
+YouTube afviser hentning fra en server med *"Sign in to confirm you're not a bot"*. Det er
+IP-adressen, der bliver afvist, ikke værktøjet. Fra en almindelig hjemmeforbindelse går det
+igennem. Trayen kører på den maskine.
 
 ## Opskrifter
 
-| Fil | Hvad den gør | Kræver | Status |
-| --- | --- | --- | --- |
-| [`recipes/youtube-lyd.json`](recipes/youtube-lyd.json) | Henter lyden som m4a. Den kan transskriberes direkte. | `media`-verbet | **UDKAST: ikke kørt mod YouTube** |
-| [`recipes/youtube-video.json`](recipes/youtube-video.json) | Henter videoen som mp4 (typisk 360p) | `media`-verbet | **UDKAST: ikke kørt mod YouTube** |
-| [`recipes/youtube-udskrift.json`](recipes/youtube-udskrift.json) | Læser sidens eget "Vis udskrift"-panel: tidskode og tekst | kun profilen `youtube` (se Krav) | **UDKAST: selektorerne er ikke målt** |
+| Fil | Hvad den gør | Status |
+| --- | --- | --- |
+| [`recipes/youtube-lyd.json`](recipes/youtube-lyd.json) | Optager lydsporet, til at transskribere selv | **UDKAST: ikke kørt mod YouTube** |
+| [`recipes/youtube-video.json`](recipes/youtube-video.json) | Optager hele videoen: lyd og billede som to filer | **UDKAST: ikke kørt mod YouTube** |
 
-Alle tre starter på youtube.com. Du åbner selv videoen i vinduet, og opskriften fortsætter af sig
-selv, så snart du står på en videoside (`youtube.com/watch`). Derfor skal **Vis browser** være
-slået til i trayens menu, ellers kan du ikke se vinduet. Du har 5 minutter til at finde videoen,
-fordi trayen højst venter 10 minutter på hele kørslen, og hentningen skal også nå at blive færdig.
+Begge tager videoens adresse som parameter og kører uden at du skal være der.
 
-Filen lander i `%USERPROFILE%\.agentics\browser-tray\recipes\<opskrift>.media\`, for eksempel
-`youtube-lyd.media\O_zcc6Xl12g.m4a`. Titel, kanal og varighed står i `<opskrift>.result.json`.
+## Sådan virker det
+
+Der er intet hjælpeprogram som yt-dlp. Trayens `media`-trin åbner videoen i en ny fane i
+profilen og lader YouTubes egen afspiller spille den **lydløst på 16×**. Undervejs optager
+den de bytes, afspilleren giver browserens mediemotor. Det er det originale spor uden
+omkodning. YouTubes egen afspiller klarer alt det, der ellers knækker værktøjer udefra.
+
+- **En time tager omkring fire minutter**, hvis forbindelsen kan følge med.
+- **Billedkvaliteten** bliver den, afspilleren kan følge med i ved 16×. Det er ofte lav.
+  Lyden til en transskription klarer sig fint.
+- **Lyd og billede er to filer**, fordi browseren får dem hver for sig. Med ffmpeg fletter
+  du dem uden omkodning: `ffmpeg -i X.audio.webm -i X.video.webm -c copy X.mkv`
+- Skifter afspilleren kvalitet undervejs, bliver sporet til flere dele (`X.video.1.webm`,
+  `X.video.2.webm`), fordi delene ikke kan sættes sammen til én læsbar fil.
+
+Filerne lander i `%USERPROFILE%\.agentics\browser-tray\recipes\<opskrift>.media\`, for
+eksempel `youtube-lyd.media\O_zcc6Xl12g.audio.webm`. Titel, varighed og hvor lang tid det
+tog står i `<opskrift>.result.json`.
+
+## Kør
+
+```powershell
+$tray = "$env:LOCALAPPDATA\Agentics\bin\pks-agent-browser-tray.exe"
+& $tray run --name youtube-lyd --param url=https://www.youtube.com/watch?v=O_zcc6Xl12g *> run.log; cat run.log
+```
+
+Trayen er bygget som `WinExe` og har ingen konsol. Uden `*> fil` forsvinder både resultatet
+og fejlen.
 
 ## Krav
 
@@ -34,42 +56,27 @@ Filen lander i `%USERPROFILE%\.agentics\browser-tray\recipes\<opskrift>.media\`,
 irm https://agentics.dk/install/pks-agent-browser-tray.ps1 | iex
 ```
 
-- En tray-version med `media`-verbet. Den er endnu **ikke udgivet**.
-- En profil der hedder `youtube`. Den følger med som standard fra tray-versionen med `media`.
-  På en ældre tray skal du selv tilføje den i `settings.json`, også til `youtube-udskrift`:
-  `"profiles": { "youtube": ["youtube.com", "youtu.be"] }` (de andre profiler bevares).
-- **Node 22 eller nyere**, hvis trayen kører den slanke motor på din egen Node. yt-dlp kan ikke
-  løse YouTubes JS-udfordring med ældre Node. Den fulde motor har sin egen Node 24 med.
-
-yt-dlp følger med motoren, låst til én version og checksum-tjekket. YouTube ændrer sig oftere,
-end trayen udkommer. Knækker hentningen, så installér en nyere yt-dlp (`winget install yt-dlp`)
-og peg trayen på den i `settings.json`:
-
-```json
-{ "ytDlpPath": "C:\\Users\\<dig>\\AppData\\Local\\Microsoft\\WinGet\\Links\\yt-dlp.exe" }
-```
+- En tray-version med `media`-verbet og `--param`. Den er endnu **ikke udgivet**.
+- En profil der hedder `youtube`. Den følger med som standard fra samme version.
+- **Første gang:** en ny profil får YouTubes samtykkeside for cookies. Åbn profilen via
+  menuen (*Log ind i profil 'youtube'…*), gå ind på youtube.com og svar én gang. Så husker
+  profilen det.
 
 ## Skal jeg logge ind?
 
-Som regel ikke. Fra en hjemmeforbindelse hentes almindelige videoer uden login. Login er kun
-nødvendigt til aldersbegrænsede videoer og videoer kun for medlemmer. Så log ind i profilen via
-menuen (*Log ind i profil 'youtube'…*), og sæt `"cookies": true` på `media`-trinnet.
+Som regel ikke. Login er kun nødvendigt til aldersbegrænsede videoer og videoer kun for
+medlemmer. Så log ind i profilen via menuen. Optagelsen bruger profilens login, fordi det er
+den samme browser.
 
-**Brug en Google-konto, du kan undvære.** En konto, der bruges til automatiseret hentning, kan
-blive markeret af Google. Cookies sendes kun til YouTubes egne værter. De skrives til en midlertidig
-fil, som slettes i samme trin.
+**Brug en Google-konto, du kan undvære.** En konto, der bruges til automatiseret
+afspilning, kan blive markeret af Google. Hver optagelse står også i kontoens historik.
 
-## Kør fra kommandolinjen
+## Virker ikke på
 
-```powershell
-$tray = "$env:LOCALAPPDATA\Agentics\bin\pks-agent-browser-tray.exe"
-& $tray recipes
-& $tray run --name youtube-lyd *> run.log; cat run.log
-```
-
-Trayen er bygget som `WinExe` og har ingen konsol. Uden `*> fil` forsvinder både resultatet og fejlen.
+- DRM-beskyttet indhold, fx købte film. Browseren låser det selv.
+- Live-udsendelser, der ikke er slut.
 
 ## Brug indholdet ordentligt
 
-Opskrifterne henter til din egen maskine, til dit eget brug: at transskribere, citere og
+Opskrifterne optager til din egen maskine, til dit eget brug: at transskribere, citere og
 opsummere. Bliver indholdet delt videre, så krediter skaberen og link til videoen.
